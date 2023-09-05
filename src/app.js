@@ -1,13 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const authRoutes = require('./routes/register'); // Импортируйте модуль register.js
+const registerRoutes = require('./register/register'); // Используйте относительный путь до файла register.js
 const app = express();
 
 // Парсинг данных из тела запроса
 app.use(bodyParser.json());
 
-// Используйте маршруты из модуля authRoutes
-app.use('/auth', authRoutes);
+// Используйте маршруты из модуля registerRoutes
+app.use(registerRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
