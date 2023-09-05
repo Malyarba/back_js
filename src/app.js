@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const registerRoutes = require('./register/register'); // Используйте относительный путь до файла register.js
+const registerRoutes = require('./registration/register'); // Используйте относительный путь до файла register.js
 const app = express();
 
 // Парсинг данных из тела запроса

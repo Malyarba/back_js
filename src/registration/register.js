@@ -2,12 +2,15 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../db');
 const bcrypt = require('bcrypt');
+import error500 from '../decorators/error500validate';
+
+
 
 // TO DO: 
 // 1. Добавить ограничения по пустой строке
 // 2. Добавить ограничения по строке из пробелов
 // 3. Добавить регулярку для email`a 
-
+// 4. Добавить ограничения для email`a 
 
 // Используйте middleware express.json() для разбора JSON
 router.use(express.json());
@@ -19,7 +22,7 @@ router.post('/register', async (req, res) => {
 
     // Проверка наличия всех необходимых ключей в запросе
     const missingKeys = requiredKeys.filter(key => !(key in req.body));
-    
+
     if (missingKeys.length > 0) {
       return res.status(400).json({ message: `Отсутствует ключ: ${missingKeys.join(', ')}` });
     }
@@ -39,6 +42,14 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ message: 'Пароль должен содержать максиум 40 символов' });
     }
 
+    if (username.length < 8) {
+      return res.status(400).json({ message: 'Имя должно содержать минимум 8 символов' });
+    }
+
+    if (username.length > 40) {
+      return res.status(400).json({ message: 'Имя должно содержать максиум 40 символов' });
+    }
+
     // Хеширование пароля
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -56,7 +67,7 @@ router.post('/register', async (req, res) => {
     res.status(201).json({ message: 'Пользователь успешно зарегистрирован', user: userResponse });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Ошибка регистрации пользователя - попробуйте обновить приложение и напиши в техподдержку N' });
+    res.status(500).json({ message: error500 });
   }
 });
 
