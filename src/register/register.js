@@ -3,9 +3,26 @@ const router = express.Router();
 const pool = require('../db');
 const bcrypt = require('bcrypt');
 
+// TO DO: 
+// 1. Добавить ограничения по пустой строке
+// 2. Добавить ограничения по строке из пробелов
+// 3. Добавить регулярку для email`a 
+
+
+// Используйте middleware express.json() для разбора JSON
+router.use(express.json());
+
 router.post('/register', async (req, res) => {
   try {
     const { username, email, password } = req.body;
+    const requiredKeys = ['username', 'email', 'password']; // массив обязательных ключей в запросе
+
+    // Проверка наличия всех необходимых ключей в запросе
+    const missingKeys = requiredKeys.filter(key => !(key in req.body));
+    
+    if (missingKeys.length > 0) {
+      return res.status(400).json({ message: `Отсутствует ключ: ${missingKeys.join(', ')}` });
+    }
 
     // Проверка уникальности email'а
     const existingUser = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
