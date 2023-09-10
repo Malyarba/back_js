@@ -1,8 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const pool = require('../db');
+const pool = require('../../db');
 const bcrypt = require('bcrypt');
 const { error500 } = require('../decorators/error500validate');
+const helmet = require('helmet');
+
+router.use(express.json()); // Middleware для разбора JSON
+router.use(helmet()); // Используем middleware Helmet для обеспечения безопасности
+
 
 // TO DO: 
 // 1. Добавить ограничения по пустой строке
@@ -11,9 +16,6 @@ const { error500 } = require('../decorators/error500validate');
 // 5. Добавить регулярку для email`a 
 // 6. Добавить ограничения для email`a 
 
-
-// Middleware для разбора JSON
-router.use(express.json());
 
 // Middleware для проверки наличия обязательных ключей
 function checkRequiredKeys(req, res, next) {
